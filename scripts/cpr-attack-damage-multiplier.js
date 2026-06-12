@@ -63,6 +63,12 @@ Hooks.on("createChatMessage", async (message) => {
   });
 
   if (multiplier > 1) {
+    // createChatMessage se déclenche sur tous les clients connectés :
+    // seul l'auteur du jet d'attaque crée le message de confirmation,
+    // sinon chaque client en crée une copie.
+    const authorId = message.author?.id ?? message.user?.id;
+    if (game.user.id !== authorId) return;
+
     ChatMessage.create({
       speaker: message.speaker,
       content: `
